@@ -17,5 +17,3 @@ export type IFilm = {
   released: number;
   isFavorite: boolean;
 };
-
-export type IPromoFilm = Pick<IFilm, 'name' | 'genre' | 'released'>;
