@@ -1,10 +1,12 @@
 import * as React from 'react';
 import classNames from 'classnames';
+import { Link } from 'react-router-dom';
 
 type Header = {
   isFilmCard?: boolean;
   isMyList?: boolean;
   isSignIn?: boolean;
+  isError?: boolean;
 };
 
 function Header(props: Header): JSX.Element {
@@ -17,24 +19,24 @@ function Header(props: Header): JSX.Element {
   return (
     <header className={className}>
       <div className='logo'>
-        <a href='main.html' className='logo__link'>
+        <Link to='/' className='logo__link'>
           <span className='logo__letter logo__letter--1'>W</span>
           <span className='logo__letter logo__letter--2'>T</span>
           <span className='logo__letter logo__letter--3'>W</span>
-        </a>
+        </Link>
       </div>
 
-      {props.isMyList && (
+      {props.isMyList && !props.isError && (
         <h1 className='page-title user-page__title'>
           My list <span className='user-page__film-count'>9</span>
         </h1>
       )}
 
-      {props.isSignIn && (
+      {props.isSignIn && !props.isError && (
         <h1 className='page-title user-page__title'>Sign In</h1>
       )}
 
-      {!props.isSignIn && (
+      {!props.isSignIn && !props.isError && (
         <ul className='user-block'>
           <li className='user-block__item'>
             <div className='user-block__avatar'>

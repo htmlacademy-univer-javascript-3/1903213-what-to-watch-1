@@ -1,15 +1,19 @@
 import * as React from 'react';
 import MovieCard from '../../components/movie-card/movie-card';
-import { IPromoFilm } from '../../types/IFilm';
 import Header from '../../components/header/header';
 import Footer from '../../components/footer/footer';
+import { IFilm } from '../../types/IFilm';
 
-function Main({ name, genre, released }: IPromoFilm): JSX.Element {
+type MainProps = {
+  film: IFilm;
+};
+
+function Main({ film }: MainProps): JSX.Element {
   return (
     <>
       <section className='film-card'>
         <div className='film-card__bg'>
-          <img src='/img/bg-the-grand-budapest-hotel.jpg' alt={name} />
+          <img src={film.backgroundImage} alt={film.name} />
         </div>
 
         <h1 className='visually-hidden'>WTW</h1>
@@ -20,18 +24,18 @@ function Main({ name, genre, released }: IPromoFilm): JSX.Element {
           <div className='film-card__info'>
             <div className='film-card__poster'>
               <img
-                src='/img/fantastic-beasts-the-crimes-of-grindelwald.jpg'
-                alt={`${name} poster`}
+                src={film.posterImage}
+                alt={`${film.name} poster`}
                 width='218'
                 height='327'
               />
             </div>
 
             <div className='film-card__desc'>
-              <h2 className='film-card__title'>{name}</h2>
+              <h2 className='film-card__title'>{film.name}</h2>
               <p className='film-card__meta'>
-                <span className='film-card__genre'>{genre}</span>
-                <span className='film-card__year'>{released}</span>
+                <span className='film-card__genre'>{film.genre}</span>
+                <span className='film-card__year'>{film.released}</span>
               </p>
 
               <div className='film-card__buttons'>

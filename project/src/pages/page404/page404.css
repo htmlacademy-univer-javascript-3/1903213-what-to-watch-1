@@ -1,0 +1,23 @@
+.error-title {
+  text-align: center;
+  font-size: 6rem;
+  line-height: 7rem;
+}
+
+.error-description {
+  text-align: center;
+  font-size: 2rem;
+  line-height: 3rem;
+}
+
+.error-back-link {
+  text-align: center;
+  font-size: 2rem;
+  line-height: 4rem;
+  color: #c9b37e;
+  margin: 20px 0 auto;
+  display: block;
+  text-decoration: none;
+  border-radius: 16px;
+  border: 3px solid #c9b37e;
+}
