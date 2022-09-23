@@ -9,38 +9,43 @@ import Player from '../../pages/player/player';
 import Page404 from '../../pages/page404/page404';
 import ScrollToTop from '../scroll-to-top/scroll-to-top';
 import PrivateRoute from '../private-route/private-route';
+import Layout from '../layout/layout';
 
-type BaseProps = {
-  promoFilmData: IFilm;
-  filmData: IFilm;
+type AppProps = {
+  promoFilm: IFilm;
+  films: IFilm[];
 };
 
-function App({ promoFilmData, filmData }: BaseProps): JSX.Element {
+function App({ promoFilm, films }: AppProps): JSX.Element {
   return (
     <BrowserRouter>
       <ScrollToTop />
       <Routes>
-        <Route path='/' element={<Main film={promoFilmData} />} />
-        <Route path='/login' element={<SignIn />} />
-        <Route
-          path='/mylist'
-          element={
-            <PrivateRoute isAuth={false}>
-              <MyList />
-            </PrivateRoute>
-          }
-        />
-        <Route path='/films/:id' element={<Film filmData={filmData} />}>
+        <Route path='/' element={<Layout />}>
+          <Route index element={<Main promoFilm={promoFilm} films={films} />} />
+          <Route path='login' element={<SignIn />} />
           <Route
-            path='review'
+            path='mylist'
             element={
-              <PrivateRoute isAuth={false}>
-                <AddReview />
+              <PrivateRoute isAuth>
+                <MyList films={films} />
               </PrivateRoute>
             }
           />
+          <Route path='films/:id/'>
+            <Route index element={<Film films={films} />} />
+            <Route
+              path='review'
+              element={
+                <PrivateRoute isAuth>
+                  <AddReview films={films} />
+                </PrivateRoute>
+              }
+            />
+          </Route>
+          <Route path='player/:id' element={<Player films={films} />} />
         </Route>
-        <Route path='/player/:id' element={<Player />} />
+
         <Route path='*' element={<Page404 />} />
       </Routes>
     </BrowserRouter>
