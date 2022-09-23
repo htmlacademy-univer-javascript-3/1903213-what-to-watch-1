@@ -1,19 +1,21 @@
 import * as React from 'react';
-import MovieCard from '../../components/movie-card/movie-card';
 import Header from '../../components/header/header';
 import Footer from '../../components/footer/footer';
 import { IFilm } from '../../types/IFilm';
+import FilmList from '../../components/film-list/film-list';
+import { Link } from 'react-router-dom';
 
 type MainProps = {
-  film: IFilm;
+  promoFilm: IFilm;
+  films: IFilm[];
 };
 
-function Main({ film }: MainProps): JSX.Element {
+function Main({ promoFilm, films }: MainProps): JSX.Element {
   return (
     <>
       <section className='film-card'>
         <div className='film-card__bg'>
-          <img src={film.backgroundImage} alt={film.name} />
+          <img src={promoFilm.backgroundImage} alt={promoFilm.name} />
         </div>
 
         <h1 className='visually-hidden'>WTW</h1>
@@ -24,30 +26,30 @@ function Main({ film }: MainProps): JSX.Element {
           <div className='film-card__info'>
             <div className='film-card__poster'>
               <img
-                src={film.posterImage}
-                alt={`${film.name} poster`}
+                src={promoFilm.posterImage}
+                alt={`${promoFilm.name} poster`}
                 width='218'
                 height='327'
               />
             </div>
 
             <div className='film-card__desc'>
-              <h2 className='film-card__title'>{film.name}</h2>
+              <h2 className='film-card__title'>{promoFilm.name}</h2>
               <p className='film-card__meta'>
-                <span className='film-card__genre'>{film.genre}</span>
-                <span className='film-card__year'>{film.released}</span>
+                <span className='film-card__genre'>{promoFilm.genre}</span>
+                <span className='film-card__year'>{promoFilm.released}</span>
               </p>
 
               <div className='film-card__buttons'>
-                <button
+                <Link
                   className='btn btn--play film-card__button'
-                  type='button'
+                  to={`/player/${promoFilm.id}`}
                 >
                   <svg viewBox='0 0 19 19' width='19' height='19'>
                     <use xlinkHref='#play-s'></use>
                   </svg>
                   <span>Play</span>
-                </button>
+                </Link>
                 <button
                   className='btn btn--list film-card__button'
                   type='button'
@@ -121,26 +123,7 @@ function Main({ film }: MainProps): JSX.Element {
             </li>
           </ul>
           <div className='catalog__films-list'>
-            <MovieCard />
-            <MovieCard />
-            <MovieCard />
-            <MovieCard />
-            <MovieCard />
-            <MovieCard />
-            <MovieCard />
-            <MovieCard />
-            <MovieCard />
-            <MovieCard />
-            <MovieCard />
-            <MovieCard />
-            <MovieCard />
-            <MovieCard />
-            <MovieCard />
-            <MovieCard />
-            <MovieCard />
-            <MovieCard />
-            <MovieCard />
-            <MovieCard />
+            <FilmList films={films} />
           </div>
           <div className='catalog__more'>
             <button className='catalog__button' type='button'>
