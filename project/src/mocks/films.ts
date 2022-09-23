@@ -204,7 +204,8 @@ export const films = [
     released: 2014,
     id: 8,
     isFavorite: false,
-    videoLink: 'https://10.react.pages.academy/static/film/video/bubbles.mp4',
+    videoLink:
+      'https://rr2---sn-gvnuxaxjvh-jx3s.googlevideo.com/videoplayback?expire=1663970772&ei=dNktY6iIFumD0u8PsoK6uA8&ip=188.18.141.8&id=o-ALOu6z9ZFN7v1PJRNHxGTx-1LTQEJ83O1XNf2uzH77OC&itag=18&source=youtube&requiressl=yes&mh=nF&mm=31%2C29&mn=sn-gvnuxaxjvh-jx3s%2Csn-n8v7knez&ms=au%2Crdu&mv=m&mvi=2&pl=23&initcwndbps=1247500&vprv=1&mime=video%2Fmp4&ns=tz1vibrZGgLoJbYsmvN2UCgI&cnr=14&ratebypass=yes&dur=166.719&lmt=1658620894015647&mt=1663948872&fvip=8&fexp=24001373%2C24007246&c=WEB&txp=5318224&n=m62cyJkGjxvSRJ39O&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cvprv%2Cmime%2Cns%2Ccnr%2Cratebypass%2Cdur%2Clmt&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=AG3C_xAwRAIgJjJQ3sn7BEqydQJ3kqs67dsQPKmlhlARO6MafPnuoe8CIAetQ5JURY_V6DoyA-ztk3ct9d1idcjLS-2-MgCwL7g7&sig=AOq0QJ8wRAIgQ7ETH7cX_eqsocRZ1DIvkVBYFAPkAvZ-ahDxRA3CtUUCIDUGySGOSKWh1cXaCjrqaOifM-5zUXf1nhSj6AVT647I',
     previewVideoLink: 'https://10.react.pages.academy/static/film/video/dog.mp4'
   }
 ];
