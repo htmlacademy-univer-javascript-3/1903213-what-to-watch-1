@@ -2,6 +2,8 @@ import * as React from 'react';
 import classNames from 'classnames';
 import { Link, useParams } from 'react-router-dom';
 import { IFilm } from '../../types/IFilm';
+import Logo from '../logo/logo';
+import UserBlock from '../user-block/user-block';
 
 type HeaderProps = {
   isFilmCard?: boolean;
@@ -25,14 +27,7 @@ function Header(props: HeaderProps): JSX.Element {
 
   return (
     <header className={className}>
-      <div className='logo'>
-        <Link to='/' className='logo__link'>
-          <span className='logo__letter logo__letter--1'>W</span>
-          <span className='logo__letter logo__letter--2'>T</span>
-          <span className='logo__letter logo__letter--3'>W</span>
-        </Link>
-      </div>
-
+      <Logo />
       {props.isAddReview && !props.isError && (
         <nav className='breadcrumbs'>
           <ul className='breadcrumbs__list'>
@@ -55,27 +50,9 @@ function Header(props: HeaderProps): JSX.Element {
         </h1>
       )}
 
-      {props.isSignIn && !props.isError && (
-        <h1 className='page-title user-page__title'>Sign In</h1>
-      )}
+      {props.isSignIn && !props.isError && <UserBlock isAuth={false} />}
 
-      {!props.isSignIn && !props.isError && (
-        <ul className='user-block'>
-          <li className='user-block__item'>
-            <div className='user-block__avatar'>
-              <img
-                src='/img/avatar.jpg'
-                alt='User avatar'
-                width='63'
-                height='63'
-              />
-            </div>
-          </li>
-          <li className='user-block__item'>
-            <a className='user-block__link'>Sign out</a>
-          </li>
-        </ul>
-      )}
+      {!props.isSignIn && !props.isError && <UserBlock isAuth />}
     </header>
   );
 }

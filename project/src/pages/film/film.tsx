@@ -39,11 +39,8 @@ function Film({ films }: FilmData): JSX.Element {
             <div className='film-card__bg'>
               <img src={film.backgroundImage} alt={film.name} />
             </div>
-
-            <h1 className='visually-hidden'>WTW</h1>
-
+            <h1 className='visually-hidden'>WTW</h1>`
             <Header isFilmCard />
-
             <div className='film-card__wrap'>
               <div className='film-card__desc'>
                 <h2 className='film-card__title'>{film.name}</h2>
