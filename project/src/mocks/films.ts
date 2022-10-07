@@ -1,4 +1,6 @@
-export const promoFilm = {
+import { IFilm } from '../types/IFilm';
+
+export const promoFilm: IFilm = {
   name: 'Snatch',
   posterImage: 'https://10.react.pages.academy/static/film/poster/Snatch.jpg',
   previewImage: 'https://10.react.pages.academy/static/film/preview/snatch.jpg',
@@ -20,7 +22,7 @@ export const promoFilm = {
   previewVideoLink: 'https://10.react.pages.academy/static/film/video/dog.mp4'
 };
 
-export const films = [
+export const films: IFilm[] = [
   {
     name: 'Snatch',
     posterImage: 'https://10.react.pages.academy/static/film/poster/Snatch.jpg',

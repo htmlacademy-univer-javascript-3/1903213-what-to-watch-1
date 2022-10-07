@@ -10,13 +10,15 @@ import Page404 from '../../pages/page404/page404';
 import ScrollToTop from '../scroll-to-top/scroll-to-top';
 import PrivateRoute from '../private-route/private-route';
 import Layout from '../layout/layout';
+import { IReview } from '../../types/IReview';
 
 type AppProps = {
   promoFilm: IFilm;
   films: IFilm[];
+  reviews: IReview[];
 };
 
-function App({ promoFilm, films }: AppProps): JSX.Element {
+function App({ promoFilm, films, reviews }: AppProps): JSX.Element {
   return (
     <BrowserRouter>
       <ScrollToTop />
@@ -33,7 +35,7 @@ function App({ promoFilm, films }: AppProps): JSX.Element {
             }
           />
           <Route path='films/:id/'>
-            <Route index element={<Film films={films} />} />
+            <Route index element={<Film films={films} reviews={reviews} />} />
             <Route
               path='review'
               element={

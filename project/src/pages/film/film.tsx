@@ -5,15 +5,23 @@ import Footer from '../../components/footer/footer';
 import { Link, useParams } from 'react-router-dom';
 import Page404 from '../page404/page404';
 import FilmList from '../../components/film-list/film-list';
+import Tabs from '../../components/tabs/tabs';
+import TabsList from '../../components/tabs-list/tabs-list';
+import Tab from '../../components/tab/tab';
+import TabPanel from '../../components/tab-panel/tab-panel';
+import { useState } from 'react';
+import { IReview } from '../../types/IReview';
 
 type FilmData = {
   films: IFilm[];
+  reviews: IReview[];
 };
 
-function Film({ films }: FilmData): JSX.Element {
+function Film({ films, reviews }: FilmData): JSX.Element {
   const params = useParams();
   const film = films.find((item) => item.id === Number(params.id));
   const ratingLevel = film ? getRatingLevel(film.rating) : null;
+  const [activeTab, setActiveTab] = useState('1');
 
   function getRatingLevel(rating: number) {
     if (rating < 3) {
@@ -30,6 +38,24 @@ function Film({ films }: FilmData): JSX.Element {
       return 'Don`t know';
     }
   }
+
+  const onTabClickHandler = (tabId: string) => {
+    setActiveTab(tabId);
+  };
+
+  const formatTime = (minutes: number): string => {
+    return `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
+  };
+
+  const formatDate = (date: string) => {
+    const time = new Date(date);
+
+    return time.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
 
   return (
     <>
@@ -88,50 +114,175 @@ function Film({ films }: FilmData): JSX.Element {
                 />
               </div>
 
-              <div className='film-card__desc'>
-                <nav className='film-nav film-card__nav'>
-                  <ul className='film-nav__list'>
-                    <li className='film-nav__item film-nav__item--active'>
-                      <a href='#' className='film-nav__link'>
-                        Overview
-                      </a>
-                    </li>
-                    <li className='film-nav__item'>
-                      <a href='#' className='film-nav__link'>
-                        Details
-                      </a>
-                    </li>
-                    <li className='film-nav__item'>
-                      <a href='#' className='film-nav__link'>
-                        Reviews
-                      </a>
-                    </li>
-                  </ul>
-                </nav>
-                <div className='film-rating'>
-                  <div className='film-rating__score'>{film.rating}</div>
-                  <p className='film-rating__meta'>
-                    <span className='film-rating__level'>{ratingLevel}</span>
-                    <span className='film-rating__count'>
-                      {film.scoresCount}
-                    </span>
-                  </p>
-                </div>
-                <div className='film-card__text'>
-                  <p>{film.description}</p>
+              <Tabs>
+                <TabsList>
+                  <Tab
+                    id='1'
+                    selected={activeTab === '1'}
+                    tabIndex={1}
+                    clickHandler={onTabClickHandler}
+                  >
+                    Overview
+                  </Tab>
+                  <Tab
+                    id='2'
+                    selected={activeTab === '2'}
+                    tabIndex={2}
+                    clickHandler={onTabClickHandler}
+                  >
+                    Details
+                  </Tab>
+                  <Tab
+                    id='3'
+                    selected={activeTab === '3'}
+                    tabIndex={3}
+                    clickHandler={onTabClickHandler}
+                  >
+                    Reviews
+                  </Tab>
+                </TabsList>
+                <TabPanel id={1} selected={activeTab === '1'}>
+                  <div className='film-rating'>
+                    <div className='film-rating__score'>{film.rating}</div>
+                    <p className='film-rating__meta'>
+                      <span className='film-rating__level'>{ratingLevel}</span>
+                      <span className='film-rating__count'>
+                        {film.scoresCount}
+                      </span>
+                    </p>
+                  </div>
+                  <div className='film-card__text'>
+                    <p>{film.description}</p>
 
-                  <p className='film-card__director'>
-                    <strong>Director: {film.director}</strong>
-                  </p>
+                    <p className='film-card__director'>
+                      <strong>Director: {film.director}</strong>
+                    </p>
 
-                  <p className='film-card__starring'>
-                    <strong>
-                      Starring: {film.starring.map((item) => item).join(', ')}{' '}
-                      and other
-                    </strong>
-                  </p>
-                </div>
-              </div>
+                    <p className='film-card__starring'>
+                      <strong>
+                        Starring: {film.starring.map((item) => item).join(', ')}{' '}
+                        and other
+                      </strong>
+                    </p>
+                  </div>
+                </TabPanel>
+                <TabPanel id={2} selected={activeTab === '2'}>
+                  <div className='film-card__text film-card__row'>
+                    <div className='film-card__text-col'>
+                      <p className='film-card__details-item'>
+                        <strong className='film-card__details-name'>
+                          Director
+                        </strong>
+                        <span className='film-card__details-value'>
+                          {film.director}
+                        </span>
+                      </p>
+                      <p className='film-card__details-item'>
+                        <strong className='film-card__details-name'>
+                          Starring
+                        </strong>
+                        <span className='film-card__details-value'>
+                          {film.starring.map((star) => (
+                            <>
+                              {`${star}, `}
+                              <br />
+                            </>
+                          ))}
+                        </span>
+                      </p>
+                    </div>
+
+                    <div className='film-card__text-col'>
+                      <p className='film-card__details-item'>
+                        <strong className='film-card__details-name'>
+                          Run Time
+                        </strong>
+                        <span className='film-card__details-value'>
+                          {formatTime(film.runTime)}
+                        </span>
+                      </p>
+                      <p className='film-card__details-item'>
+                        <strong className='film-card__details-name'>
+                          Genre
+                        </strong>
+                        <span className='film-card__details-value'>
+                          {film.genre}
+                        </span>
+                      </p>
+                      <p className='film-card__details-item'>
+                        <strong className='film-card__details-name'>
+                          Released
+                        </strong>
+                        <span className='film-card__details-value'>
+                          {film.released}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                </TabPanel>
+                <TabPanel id={3} selected={activeTab === '3'}>
+                  <div className='film-card__reviews film-card__row'>
+                    <div className='film-card__reviews-col'>
+                      {reviews
+                        .slice(0, Math.round(reviews.length / 2))
+                        .map((review) => (
+                          <div className='review' key={review.id}>
+                            <blockquote className='review__quote'>
+                              <p className='review__text'>
+                                {review.comment.slice(0, 150)}
+                              </p>
+
+                              <footer className='review__details'>
+                                <cite className='review__author'>
+                                  {review.user.name}
+                                </cite>
+                                <time
+                                  className='review__date'
+                                  dateTime={review.date}
+                                >
+                                  {formatDate(review.date)}
+                                </time>
+                              </footer>
+                            </blockquote>
+
+                            <div className='review__rating'>
+                              {review.rating.toFixed(1)}
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                    <div className='film-card__reviews-col'>
+                      {reviews
+                        .slice(Math.round(reviews.length / 2))
+                        .map((review) => (
+                          <div className='review' key={review.id}>
+                            <blockquote className='review__quote'>
+                              <p className='review__text'>
+                                {review.comment.slice(0, 150)}
+                              </p>
+
+                              <footer className='review__details'>
+                                <cite className='review__author'>
+                                  {review.user.name}
+                                </cite>
+                                <time
+                                  className='review__date'
+                                  dateTime={review.date}
+                                >
+                                  {formatDate(review.date)}
+                                </time>
+                              </footer>
+                            </blockquote>
+
+                            <div className='review__rating'>
+                              {review.rating.toFixed(1)}
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                </TabPanel>
+              </Tabs>
             </div>
           </div>
         </section>
@@ -143,7 +294,7 @@ function Film({ films }: FilmData): JSX.Element {
           <h2 className='catalog__title'>More like this</h2>
 
           <div className='catalog__films-list'>
-            <FilmList films={films} />
+            <FilmList films={films} activeFilm={film} />
           </div>
         </section>
 
