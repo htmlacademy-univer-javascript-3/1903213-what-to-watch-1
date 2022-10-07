@@ -20,7 +20,7 @@ function Main({ promoFilm, films }: MainProps): JSX.Element {
 
         <h1 className='visually-hidden'>WTW</h1>
 
-        <Header isFilmCard />
+        <Header isFilmCard isSignIn />
 
         <div className='film-card__wrap'>
           <div className='film-card__info'>
