@@ -6,9 +6,9 @@ type TabPanelProps = {
 };
 
 function TabPanel(props: PropsWithChildren<TabPanelProps>): JSX.Element {
-  const { children, selected } = props;
+  const { children, selected, id } = props;
 
-  return <Fragment>{selected ? children : null}</Fragment>;
+  return <Fragment key={id}>{selected ? children : null}</Fragment>;
 }
 
 export default TabPanel;

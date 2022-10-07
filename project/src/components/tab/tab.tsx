@@ -1,6 +1,5 @@
-import { PropsWithChildren, useRef } from 'react';
+import { PropsWithChildren } from 'react';
 import classNames from 'classnames';
-import { Link, useLocation } from 'react-router-dom';
 
 const defaultClassName = 'film-nav__item';
 const selectedClassName = 'film-nav__item--active';

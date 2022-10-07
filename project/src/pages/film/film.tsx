@@ -43,10 +43,8 @@ function Film({ films, reviews }: FilmData): JSX.Element {
     setActiveTab(tabId);
   };
 
-  const formatTime = (minutes: number): string => {
-    return `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
-  };
-
+  const formatTime = (minutes: number): string =>
+    `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
   const formatDate = (date: string) => {
     const time = new Date(date);
 

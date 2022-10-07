@@ -3,9 +3,7 @@ import classNames from 'classnames';
 
 const defaultClassName = 'film-nav__list';
 
-type TabsListProps = {};
-
-function TabsList(props: PropsWithChildren<TabsListProps>): JSX.Element {
+function TabsList(props: PropsWithChildren): JSX.Element {
   const { children, ...attributes } = props;
   return (
     <nav className={classNames('film-nav', 'film-card__nav')}>
