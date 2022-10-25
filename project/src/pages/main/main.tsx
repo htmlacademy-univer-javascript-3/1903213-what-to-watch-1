@@ -5,14 +5,29 @@ import { IFilm } from '../../types/IFilm';
 import FilmList from '../../components/film-list/film-list';
 import { Link } from 'react-router-dom';
 import GenresNav from '../../components/genres-nav/genres-nav';
-import { useAppSelector } from '../../hooks/useAppSelector';
+import ShowMore from '../../components/show-more/show-more';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { changeGenre, getFilms, resetFilmsCount } from '../../store/action';
+import { useEffect } from 'react';
+import { INITIAL_GENRE } from '../../store/reducer';
 
 type MainProps = {
   promoFilm: IFilm;
 };
 
 function Main({ promoFilm }: MainProps): JSX.Element {
-  const { films } = useAppSelector((state) => state);
+  const dispatch = useAppDispatch();
+
+  const onPageUpdateResetFilms = () => {
+    dispatch(changeGenre(INITIAL_GENRE));
+    dispatch(getFilms());
+    dispatch(resetFilmsCount());
+  };
+
+  useEffect(() => {
+    onPageUpdateResetFilms();
+  }, []);
+
   return (
     <>
       <section className='film-card'>
@@ -73,12 +88,10 @@ function Main({ promoFilm }: MainProps): JSX.Element {
           <h2 className='catalog__title visually-hidden'>Catalog</h2>
           <GenresNav />
           <div className='catalog__films-list'>
-            <FilmList films={films} />
+            <FilmList />
           </div>
           <div className='catalog__more'>
-            <button className='catalog__button' type='button'>
-              Show more
-            </button>
+            <ShowMore />
           </div>
         </section>
         <Footer />

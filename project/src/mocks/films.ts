@@ -47,6 +47,33 @@ export const films: IFilm[] = [
     previewVideoLink: 'https://10.react.pages.academy/static/film/video/dog.mp4'
   },
   {
+    name: 'Beach',
+    posterImage: 'https://10.react.pages.academy/static/film/poster/beach.jpg',
+    previewImage:
+      'https://10.react.pages.academy/static/film/preview/beach.jpg',
+    backgroundImage:
+      'https://10.react.pages.academy/static/film/background/beach.jpg',
+    backgroundColor: '#EBC996',
+    description:
+      'Vicenarian Richard travels to Thailand and finds himself in possession of a strange map. Rumours state that it leads to a solitary beach paradise, a tropical bliss. Excited and intrigued, he sets out to find it.',
+    rating: 3.3,
+    scoresCount: 207824,
+    director: 'Danny Boyle',
+    starring: [
+      'Leonardo DiCaprio',
+      'Daniel York',
+      'Patcharawan Patarakijjanon'
+    ],
+    runTime: 119,
+    genre: 'Adventure',
+    released: 2000,
+    id: 10,
+    isFavorite: false,
+    videoLink: 'https://10.react.pages.academy/static/film/video/matrix.mp4',
+    previewVideoLink:
+      'https://10.react.pages.academy/static/film/video/traffic.mp4'
+  },
+  {
     name: 'Snatch',
     posterImage: 'https://10.react.pages.academy/static/film/poster/Snatch.jpg',
     previewImage:
