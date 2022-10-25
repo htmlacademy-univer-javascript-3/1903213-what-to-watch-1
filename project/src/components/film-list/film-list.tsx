@@ -1,13 +1,15 @@
 import * as React from 'react';
 import { IFilm } from '../../types/IFilm';
 import FilmCard from '../film-card/film-card';
+import { useAppSelector } from '../../hooks/useAppSelector';
 
 type FilmListProps = {
-  films: IFilm[];
   activeFilm?: IFilm;
 };
 
-function FilmList({ films, activeFilm }: FilmListProps): JSX.Element {
+function FilmList({ activeFilm }: FilmListProps): JSX.Element {
+  const { films, filmsShowCount } = useAppSelector((state) => state);
+
   return (
     <>
       {activeFilm && (
@@ -24,7 +26,7 @@ function FilmList({ films, activeFilm }: FilmListProps): JSX.Element {
       )}
       {!activeFilm && (
         <>
-          {films.map((film) => (
+          {films.slice(0, filmsShowCount).map((film) => (
             <FilmCard key={film.id} film={film} />
           ))}
         </>

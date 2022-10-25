@@ -292,7 +292,7 @@ function Film({ films, reviews }: FilmData): JSX.Element {
           <h2 className='catalog__title'>More like this</h2>
 
           <div className='catalog__films-list'>
-            <FilmList films={films} activeFilm={film} />
+            <FilmList activeFilm={film} />
           </div>
         </section>
 
