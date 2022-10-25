@@ -24,6 +24,29 @@ export const promoFilm: IFilm = {
 
 export const films: IFilm[] = [
   {
+    name: 'Shutter Island',
+    posterImage:
+      'https://10.react.pages.academy/static/film/poster/Shutter_Island.jpg',
+    previewImage:
+      'https://10.react.pages.academy/static/film/preview/shutter-island.jpg',
+    backgroundImage:
+      'https://10.react.pages.academy/static/film/background/Shutter_Island.jpg',
+    backgroundColor: '#977461',
+    description:
+      'In 1954, a U.S. Marshal investigates the disappearance of a murderer, who escaped from a hospital for the criminally insane.',
+    rating: 4.1,
+    scoresCount: 1002557,
+    director: 'Martin Scorsese',
+    starring: ['Leonardo DiCaprio', 'Emily Mortimer', 'Mark Ruffalo'],
+    runTime: 138,
+    genre: 'Thriller',
+    released: 2010,
+    id: 11,
+    isFavorite: false,
+    videoLink: 'https://10.react.pages.academy/static/film/video/bubbles.mp4',
+    previewVideoLink: 'https://10.react.pages.academy/static/film/video/dog.mp4'
+  },
+  {
     name: 'Snatch',
     posterImage: 'https://10.react.pages.academy/static/film/poster/Snatch.jpg',
     previewImage:
