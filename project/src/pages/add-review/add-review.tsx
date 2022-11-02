@@ -1,17 +1,14 @@
 // @flow
 import * as React from 'react';
 import Header from '../../components/header/header';
-import { IFilm } from '../../types/IFilm';
 import { useParams } from 'react-router-dom';
 import Page404 from '../page404/page404';
 import AddReviewForm from '../../components/add-review-form/add-review-form';
+import { useAppSelector } from '../../hooks/useAppSelector';
 
-type AddReviewProps = {
-  films: IFilm[];
-};
-
-function AddReview({ films }: AddReviewProps): JSX.Element {
+function AddReview(): JSX.Element {
   const params = useParams();
+  const films = useAppSelector((state) => state.films);
   const film = films.find((item) => item.id === Number(params.id));
 
   return (
@@ -25,7 +22,7 @@ function AddReview({ films }: AddReviewProps): JSX.Element {
 
             <h1 className='visually-hidden'>WTW</h1>
 
-            <Header isAddReview films={films} />
+            <Header isAddReview />
 
             <div className='film-card__poster film-card__poster--small'>
               <img
@@ -38,7 +35,7 @@ function AddReview({ films }: AddReviewProps): JSX.Element {
           </div>
 
           <div className='add-review'>
-            <AddReviewForm />
+            <AddReviewForm filmId={film.id} />
           </div>
         </section>
       )}

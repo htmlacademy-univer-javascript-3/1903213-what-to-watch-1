@@ -5,10 +5,13 @@ import { useAppSelector } from '../../hooks/useAppSelector';
 
 type FilmListProps = {
   activeFilm?: IFilm;
+  isFavorites?: boolean;
 };
 
-function FilmList({ activeFilm }: FilmListProps): JSX.Element {
-  const { films, filmsShowCount } = useAppSelector((state) => state);
+function FilmList({ activeFilm, isFavorites }: FilmListProps): JSX.Element {
+  const { films, filmsShowCount, favoritesFilms } = useAppSelector(
+    (state) => state
+  );
 
   return (
     <>
@@ -24,7 +27,17 @@ function FilmList({ activeFilm }: FilmListProps): JSX.Element {
             ))}
         </>
       )}
-      {!activeFilm && (
+      {isFavorites && (
+        <>
+          {favoritesFilms.map((film) => (
+            <FilmCard key={film.id} film={film} />
+          ))}
+          {favoritesFilms.length === 0 && (
+            <div>Вы пока не добавили фильмы к себе в коллекцию</div>
+          )}
+        </>
+      )}
+      {!activeFilm && !isFavorites && (
         <>
           {films.slice(0, filmsShowCount).map((film) => (
             <FilmCard key={film.id} film={film} />

@@ -1,20 +1,42 @@
 import * as React from 'react';
 import { Fragment } from 'react';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { setReviewAction } from '../../store/api-actions';
+import { useNavigate } from 'react-router-dom';
 
-function AddReviewForm(): JSX.Element {
-  type FormData = {
-    rating: number | undefined;
-    reviewText: string | undefined;
-  };
+type FormData = {
+  rating: number;
+  reviewText: string;
+};
 
+type AddReviewFormProps = {
+  filmId: number;
+};
+
+function AddReviewForm({ filmId }: AddReviewFormProps): JSX.Element {
   const [formData, setFormData] = React.useState<FormData>({
-    rating: undefined,
-    reviewText: undefined
+    rating: 0,
+    reviewText: ''
   });
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const fieldChangeHandle = (evt: any) => {
     const { name, value } = evt.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmitAddReview = (evt: any) => {
+    evt.preventDefault();
+    dispatch(
+      setReviewAction({
+        filmId,
+        comment: formData.reviewText,
+        rating: formData.rating
+      })
+    );
+    navigate(`/films/${filmId}`);
   };
 
   const setRatingStars = () => {
@@ -57,7 +79,11 @@ function AddReviewForm(): JSX.Element {
           value={formData.reviewText}
         />
         <div className='add-review__submit'>
-          <button className='add-review__btn' type='submit'>
+          <button
+            className='add-review__btn'
+            type='submit'
+            onClick={handleSubmitAddReview}
+          >
             Post
           </button>
         </div>

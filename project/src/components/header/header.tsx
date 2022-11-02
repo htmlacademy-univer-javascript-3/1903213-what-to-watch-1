@@ -1,9 +1,10 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import { Link, useParams } from 'react-router-dom';
-import { IFilm } from '../../types/IFilm';
 import Logo from '../logo/logo';
 import UserBlock from '../user-block/user-block';
+import { useAppSelector } from '../../hooks/useAppSelector';
+import { AuthorizationStatus } from '../../const';
 
 type HeaderProps = {
   isFilmCard?: boolean;
@@ -12,12 +13,16 @@ type HeaderProps = {
   isError?: boolean;
   isAddReview?: boolean;
   filmsCount?: number;
-  films?: IFilm[];
 };
 
 function Header(props: HeaderProps): JSX.Element {
   const params = useParams();
-  const film = props.films?.find((item) => item.id === Number(params.id));
+  const authorizationStatus = useAppSelector(
+    (state) => state.authorizationStatus
+  );
+  const isAuth = authorizationStatus === AuthorizationStatus.Auth;
+  const films = useAppSelector((state) => state.films);
+  const film = films.find((item) => item.id === Number(params.id));
 
   const className = classNames({
     'page-header': true,
@@ -50,9 +55,7 @@ function Header(props: HeaderProps): JSX.Element {
         </h1>
       )}
 
-      {props.isSignIn && !props.isError && <UserBlock isAuth={false} />}
-
-      {!props.isSignIn && !props.isError && <UserBlock isAuth />}
+      {!props.isError && <UserBlock isAuth={isAuth} />}
     </header>
   );
 }

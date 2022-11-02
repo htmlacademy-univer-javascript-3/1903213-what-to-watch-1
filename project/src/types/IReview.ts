@@ -8,3 +8,9 @@ export type IReview = {
     name: string;
   };
 };
+
+export type IReviewForm = {
+  filmId: number;
+  comment: string;
+  rating: number;
+};

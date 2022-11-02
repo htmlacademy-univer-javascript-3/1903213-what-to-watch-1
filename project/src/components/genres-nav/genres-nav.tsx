@@ -1,23 +1,24 @@
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import * as React from 'react';
-import { INITIAL_FILMS, INITIAL_GENRE } from '../../store/reducer';
+import { INITIAL_GENRE } from '../../store/reducer';
 import classNames from 'classnames';
-import { changeGenre, getFilms } from '../../store/action';
+import { changeGenre } from '../../store/action';
+import { fetchFilmsAction } from '../../store/api-actions';
 
 function GenresNav(): JSX.Element {
   const dispatch = useAppDispatch();
-  const { activeGenre } = useAppSelector((state) => state);
+  const { activeGenre, initialFilms } = useAppSelector((state) => state);
   const uniqueGenres = [
     INITIAL_GENRE,
     ...Array.from(
-      new Set<string>(INITIAL_FILMS.map((film) => film.genre)).values()
+      new Set<string>(initialFilms.map((film) => film.genre)).values()
     )
   ];
 
   const handleGenreLinkClick = (genre: string) => {
     dispatch(changeGenre(genre));
-    dispatch(getFilms());
+    dispatch(fetchFilmsAction());
   };
 
   return (
