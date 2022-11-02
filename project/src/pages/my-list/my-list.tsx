@@ -2,22 +2,20 @@ import * as React from 'react';
 import Header from '../../components/header/header';
 import Footer from '../../components/footer/footer';
 import FilmList from '../../components/film-list/film-list';
-import { IFilm } from '../../types/IFilm';
+import { useAppSelector } from '../../hooks/useAppSelector';
 
-type MyListProps = {
-  films: IFilm[];
-};
+function MyList(): JSX.Element {
+  const favorites = useAppSelector((state) => state.favoritesFilms);
 
-function MyList({ films }: MyListProps): JSX.Element {
   return (
     <div className='user-page'>
-      <Header isMyList filmsCount={films.length} />
+      <Header isMyList filmsCount={favorites.length} />
 
       <section className='catalog'>
         <h2 className='catalog__title visually-hidden'>Catalog</h2>
 
         <div className='catalog__films-list'>
-          <FilmList />
+          <FilmList isFavorites />
         </div>
       </section>
 

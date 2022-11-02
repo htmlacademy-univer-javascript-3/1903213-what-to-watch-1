@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { IFilm } from '../../types/IFilm';
 import Header from '../../components/header/header';
 import Footer from '../../components/footer/footer';
 import { Link, useParams } from 'react-router-dom';
@@ -9,16 +8,18 @@ import Tabs from '../../components/tabs/tabs';
 import TabsList from '../../components/tabs-list/tabs-list';
 import Tab from '../../components/tab/tab';
 import TabPanel from '../../components/tab-panel/tab-panel';
-import { useState } from 'react';
-import { IReview } from '../../types/IReview';
+import { Fragment, useEffect, useState } from 'react';
+import { useAppSelector } from '../../hooks/useAppSelector';
+import { fetchReviewsAction, setFavoriteAction } from '../../store/api-actions';
+import { FavoritesStatus } from '../../const';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
 
-type FilmData = {
-  films: IFilm[];
-  reviews: IReview[];
-};
-
-function Film({ films, reviews }: FilmData): JSX.Element {
+function Film(): JSX.Element {
   const params = useParams();
+  const dispatch = useAppDispatch();
+  const films = useAppSelector((state) => state.films);
+  const reviews = useAppSelector((state) => state.reviews);
+  const favorites = useAppSelector((state) => state.favoritesFilms);
   const film = films.find((item) => item.id === Number(params.id));
   const ratingLevel = film ? getRatingLevel(film.rating) : null;
   const [activeTab, setActiveTab] = useState('1');
@@ -38,6 +39,26 @@ function Film({ films, reviews }: FilmData): JSX.Element {
       return 'Don`t know';
     }
   }
+
+  const [inList, setInList] = useState(
+    favorites?.filter((item) => item.id === film?.id).length > 0
+  );
+
+  const onChangeMyListClick = () => {
+    dispatch(
+      setFavoriteAction({
+        filmId: film?.id || Number(params.id),
+        status: inList
+          ? FavoritesStatus.RemoveFavorite
+          : FavoritesStatus.AddFavorite
+      })
+    );
+    setInList(!inList);
+  };
+
+  useEffect(() => {
+    dispatch(fetchReviewsAction(Number(params.id)));
+  }, []);
 
   const onTabClickHandler = (tabId: string) => {
     setActiveTab(tabId);
@@ -86,12 +107,13 @@ function Film({ films, reviews }: FilmData): JSX.Element {
                   <button
                     className='btn btn--list film-card__button'
                     type='button'
+                    onClick={onChangeMyListClick}
                   >
                     <svg viewBox='0 0 19 20' width='19' height='20'>
-                      <use xlinkHref='#add'></use>
+                      <use xlinkHref={`${inList ? '#in-list' : '#add'}`}></use>
                     </svg>
                     <span>My list</span>
-                    <span className='film-card__count'>9</span>
+                    <span className='film-card__count'>{favorites.length}</span>
                   </button>
                   <Link to='review' className='btn film-card__button'>
                     Add review
@@ -181,10 +203,10 @@ function Film({ films, reviews }: FilmData): JSX.Element {
                         </strong>
                         <span className='film-card__details-value'>
                           {film.starring.map((star) => (
-                            <>
+                            <Fragment key={star}>
                               {`${star}, `}
                               <br />
-                            </>
+                            </Fragment>
                           ))}
                         </span>
                       </p>

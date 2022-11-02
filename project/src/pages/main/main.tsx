@@ -1,27 +1,53 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import Header from '../../components/header/header';
 import Footer from '../../components/footer/footer';
-import { IFilm } from '../../types/IFilm';
 import FilmList from '../../components/film-list/film-list';
 import { Link } from 'react-router-dom';
 import GenresNav from '../../components/genres-nav/genres-nav';
 import ShowMore from '../../components/show-more/show-more';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
-import { changeGenre, getFilms, resetFilmsCount } from '../../store/action';
-import { useEffect } from 'react';
+import { changeGenre, resetFilmsCount } from '../../store/action';
 import { INITIAL_GENRE } from '../../store/reducer';
+import { store } from '../../store';
+import {
+  fetchFavoritesAction,
+  fetchFilmsAction,
+  fetchPromoFilmAction,
+  setFavoriteAction
+} from '../../store/api-actions';
+import { useAppSelector } from '../../hooks/useAppSelector';
+import { FavoritesStatus } from '../../const';
 
-type MainProps = {
-  promoFilm: IFilm;
-};
+store.dispatch(fetchFilmsAction());
+store.dispatch(fetchPromoFilmAction());
+store.dispatch(fetchFavoritesAction());
 
-function Main({ promoFilm }: MainProps): JSX.Element {
+function Main(): JSX.Element {
   const dispatch = useAppDispatch();
+  const promoFilm = useAppSelector((state) => state.promoFilm);
+  const favorites = useAppSelector((state) => state.favoritesFilms);
 
   const onPageUpdateResetFilms = () => {
     dispatch(changeGenre(INITIAL_GENRE));
-    dispatch(getFilms());
+    dispatch(fetchFilmsAction());
     dispatch(resetFilmsCount());
+  };
+
+  const [inMyList, setInMyList] = useState(
+    favorites?.filter((item) => item.id === promoFilm.id).length > 0
+  );
+
+  const onChangeMyListClick = () => {
+    dispatch(
+      setFavoriteAction({
+        filmId: promoFilm.id,
+        status: inMyList
+          ? FavoritesStatus.RemoveFavorite
+          : FavoritesStatus.AddFavorite
+      })
+    );
+    setInMyList(!inMyList);
   };
 
   useEffect(() => {
@@ -70,12 +96,13 @@ function Main({ promoFilm }: MainProps): JSX.Element {
                 <button
                   className='btn btn--list film-card__button'
                   type='button'
+                  onClick={onChangeMyListClick}
                 >
                   <svg viewBox='0 0 19 20' width='19' height='20'>
-                    <use xlinkHref='#add'></use>
+                    <use xlinkHref={`${inMyList ? '#in-list' : '#add'}`}></use>
                   </svg>
                   <span>My list</span>
-                  <span className='film-card__count'>9</span>
+                  <span className='film-card__count'>{favorites.length}</span>
                 </button>
               </div>
             </div>
