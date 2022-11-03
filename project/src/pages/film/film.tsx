@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import Header from '../../components/header/header';
 import Footer from '../../components/footer/footer';
 import { Link, useParams } from 'react-router-dom';
@@ -8,19 +9,26 @@ import Tabs from '../../components/tabs/tabs';
 import TabsList from '../../components/tabs-list/tabs-list';
 import Tab from '../../components/tab/tab';
 import TabPanel from '../../components/tab-panel/tab-panel';
-import { Fragment, useEffect, useState } from 'react';
 import { useAppSelector } from '../../hooks/useAppSelector';
-import { fetchReviewsAction, setFavoriteAction } from '../../store/api-actions';
-import { FavoritesStatus } from '../../const';
+import {
+  fetchFilmAction,
+  fetchReviewsAction,
+  fetchSimilarFilmsAction,
+  setFavoriteAction
+} from '../../store/api-actions';
+import { AuthorizationStatus, FavoritesStatus } from '../../const';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
+import Loading from '../loading/loading';
 
 function Film(): JSX.Element {
   const params = useParams();
   const dispatch = useAppDispatch();
-  const films = useAppSelector((state) => state.films);
+  const filmId = Number(params.id);
   const reviews = useAppSelector((state) => state.reviews);
   const favorites = useAppSelector((state) => state.favoritesFilms);
-  const film = films.find((item) => item.id === Number(params.id));
+  const film = useAppSelector((state) => state.currentFilm);
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const isDataLoaded = useAppSelector((state) => state.isDataLoaded);
   const ratingLevel = film ? getRatingLevel(film.rating) : null;
   const [activeTab, setActiveTab] = useState('1');
 
@@ -48,24 +56,23 @@ function Film(): JSX.Element {
     dispatch(
       setFavoriteAction({
         filmId: film?.id || Number(params.id),
-        status: inList
-          ? FavoritesStatus.RemoveFavorite
-          : FavoritesStatus.AddFavorite
+        status: inList ? FavoritesStatus.RemoveFavorite : FavoritesStatus.AddFavorite
       })
     );
     setInList(!inList);
   };
 
   useEffect(() => {
-    dispatch(fetchReviewsAction(Number(params.id)));
-  }, []);
+    dispatch(fetchFilmAction(filmId));
+    dispatch(fetchSimilarFilmsAction(filmId));
+    dispatch(fetchReviewsAction(filmId));
+  }, [filmId]);
 
   const onTabClickHandler = (tabId: string) => {
     setActiveTab(tabId);
   };
 
-  const formatTime = (minutes: number): string =>
-    `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
+  const formatTime = (minutes: number): string => `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
   const formatDate = (date: string) => {
     const time = new Date(date);
 
@@ -75,6 +82,14 @@ function Film(): JSX.Element {
       day: 'numeric'
     });
   };
+
+  if (isDataLoaded) {
+    return <Loading />;
+  }
+
+  if (!film) {
+    return <Page404 />;
+  }
 
   return (
     <>
@@ -95,29 +110,30 @@ function Film(): JSX.Element {
                 </p>
 
                 <div className='film-card__buttons'>
-                  <Link
-                    to={`/player/${film.id}`}
-                    className='btn btn--play film-card__button'
-                  >
+                  <Link to={`/player/${film.id}`} className='btn btn--play film-card__button'>
                     <svg viewBox='0 0 19 19' width='19' height='19'>
                       <use xlinkHref='#play-s'></use>
                     </svg>
                     <span>Play</span>
                   </Link>
-                  <button
-                    className='btn btn--list film-card__button'
-                    type='button'
-                    onClick={onChangeMyListClick}
-                  >
-                    <svg viewBox='0 0 19 20' width='19' height='20'>
-                      <use xlinkHref={`${inList ? '#in-list' : '#add'}`}></use>
-                    </svg>
-                    <span>My list</span>
-                    <span className='film-card__count'>{favorites.length}</span>
-                  </button>
-                  <Link to='review' className='btn film-card__button'>
-                    Add review
-                  </Link>
+                  {authorizationStatus === AuthorizationStatus.Auth && (
+                    <button
+                      className='btn btn--list film-card__button'
+                      type='button'
+                      onClick={onChangeMyListClick}
+                    >
+                      <svg viewBox='0 0 19 20' width='19' height='20'>
+                        <use xlinkHref={`${inList ? '#in-list' : '#add'}`}></use>
+                      </svg>
+                      <span>My list</span>
+                      <span className='film-card__count'>{favorites.length}</span>
+                    </button>
+                  )}
+                  {authorizationStatus === AuthorizationStatus.Auth && (
+                    <Link to='review' className='btn film-card__button'>
+                      Add review
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>
@@ -126,12 +142,7 @@ function Film(): JSX.Element {
           <div className='film-card__wrap film-card__translate-top'>
             <div className='film-card__info'>
               <div className='film-card__poster film-card__poster--big'>
-                <img
-                  src={film.posterImage}
-                  alt={`${film.name} Poster`}
-                  width='218'
-                  height='327'
-                />
+                <img src={film.posterImage} alt={`${film.name} Poster`} width='218' height='327' />
               </div>
 
               <Tabs>
@@ -166,9 +177,7 @@ function Film(): JSX.Element {
                     <div className='film-rating__score'>{film.rating}</div>
                     <p className='film-rating__meta'>
                       <span className='film-rating__level'>{ratingLevel}</span>
-                      <span className='film-rating__count'>
-                        {film.scoresCount}
-                      </span>
+                      <span className='film-rating__count'>{film.scoresCount}</span>
                     </p>
                   </div>
                   <div className='film-card__text'>
@@ -180,8 +189,7 @@ function Film(): JSX.Element {
 
                     <p className='film-card__starring'>
                       <strong>
-                        Starring: {film.starring.map((item) => item).join(', ')}{' '}
-                        and other
+                        Starring: {film.starring.map((item) => item).join(', ')} and other
                       </strong>
                     </p>
                   </div>
@@ -190,17 +198,11 @@ function Film(): JSX.Element {
                   <div className='film-card__text film-card__row'>
                     <div className='film-card__text-col'>
                       <p className='film-card__details-item'>
-                        <strong className='film-card__details-name'>
-                          Director
-                        </strong>
-                        <span className='film-card__details-value'>
-                          {film.director}
-                        </span>
+                        <strong className='film-card__details-name'>Director</strong>
+                        <span className='film-card__details-value'>{film.director}</span>
                       </p>
                       <p className='film-card__details-item'>
-                        <strong className='film-card__details-name'>
-                          Starring
-                        </strong>
+                        <strong className='film-card__details-name'>Starring</strong>
                         <span className='film-card__details-value'>
                           {film.starring.map((star) => (
                             <Fragment key={star}>
@@ -214,28 +216,16 @@ function Film(): JSX.Element {
 
                     <div className='film-card__text-col'>
                       <p className='film-card__details-item'>
-                        <strong className='film-card__details-name'>
-                          Run Time
-                        </strong>
-                        <span className='film-card__details-value'>
-                          {formatTime(film.runTime)}
-                        </span>
+                        <strong className='film-card__details-name'>Run Time</strong>
+                        <span className='film-card__details-value'>{formatTime(film.runTime)}</span>
                       </p>
                       <p className='film-card__details-item'>
-                        <strong className='film-card__details-name'>
-                          Genre
-                        </strong>
-                        <span className='film-card__details-value'>
-                          {film.genre}
-                        </span>
+                        <strong className='film-card__details-name'>Genre</strong>
+                        <span className='film-card__details-value'>{film.genre}</span>
                       </p>
                       <p className='film-card__details-item'>
-                        <strong className='film-card__details-name'>
-                          Released
-                        </strong>
-                        <span className='film-card__details-value'>
-                          {film.released}
-                        </span>
+                        <strong className='film-card__details-name'>Released</strong>
+                        <span className='film-card__details-value'>{film.released}</span>
                       </p>
                     </div>
                   </div>
@@ -243,62 +233,40 @@ function Film(): JSX.Element {
                 <TabPanel id={3} selected={activeTab === '3'}>
                   <div className='film-card__reviews film-card__row'>
                     <div className='film-card__reviews-col'>
-                      {reviews
-                        .slice(0, Math.round(reviews.length / 2))
-                        .map((review) => (
-                          <div className='review' key={review.id}>
-                            <blockquote className='review__quote'>
-                              <p className='review__text'>
-                                {review.comment.slice(0, 150)}
-                              </p>
+                      {reviews.slice(0, Math.round(reviews.length / 2)).map((review) => (
+                        <div className='review' key={review.id}>
+                          <blockquote className='review__quote'>
+                            <p className='review__text'>{review.comment.slice(0, 150)}</p>
 
-                              <footer className='review__details'>
-                                <cite className='review__author'>
-                                  {review.user.name}
-                                </cite>
-                                <time
-                                  className='review__date'
-                                  dateTime={review.date}
-                                >
-                                  {formatDate(review.date)}
-                                </time>
-                              </footer>
-                            </blockquote>
+                            <footer className='review__details'>
+                              <cite className='review__author'>{review.user.name}</cite>
+                              <time className='review__date' dateTime={review.date}>
+                                {formatDate(review.date)}
+                              </time>
+                            </footer>
+                          </blockquote>
 
-                            <div className='review__rating'>
-                              {review.rating.toFixed(1)}
-                            </div>
-                          </div>
-                        ))}
+                          <div className='review__rating'>{review.rating.toFixed(1)}</div>
+                        </div>
+                      ))}
                     </div>
                     <div className='film-card__reviews-col'>
-                      {reviews
-                        .slice(Math.round(reviews.length / 2))
-                        .map((review) => (
-                          <div className='review' key={review.id}>
-                            <blockquote className='review__quote'>
-                              <p className='review__text'>
-                                {review.comment.slice(0, 150)}
-                              </p>
+                      {reviews.slice(Math.round(reviews.length / 2)).map((review) => (
+                        <div className='review' key={review.id}>
+                          <blockquote className='review__quote'>
+                            <p className='review__text'>{review.comment.slice(0, 150)}</p>
 
-                              <footer className='review__details'>
-                                <cite className='review__author'>
-                                  {review.user.name}
-                                </cite>
-                                <time
-                                  className='review__date'
-                                  dateTime={review.date}
-                                >
-                                  {formatDate(review.date)}
-                                </time>
-                              </footer>
-                            </blockquote>
+                            <footer className='review__details'>
+                              <cite className='review__author'>{review.user.name}</cite>
+                              <time className='review__date' dateTime={review.date}>
+                                {formatDate(review.date)}
+                              </time>
+                            </footer>
+                          </blockquote>
 
-                            <div className='review__rating'>
-                              {review.rating.toFixed(1)}
-                            </div>
-                          </div>
-                        ))}
+                          <div className='review__rating'>{review.rating.toFixed(1)}</div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </TabPanel>
@@ -307,14 +275,13 @@ function Film(): JSX.Element {
           </div>
         </section>
       )}
-      {!film && <Page404 />}
 
       <div className='page-content'>
         <section className='catalog catalog--like-this'>
           <h2 className='catalog__title'>More like this</h2>
 
           <div className='catalog__films-list'>
-            <FilmList activeFilm={film} />
+            <FilmList isSimilar />
           </div>
         </section>
 

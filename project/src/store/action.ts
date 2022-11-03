@@ -7,6 +7,8 @@ import { IReview } from '../types/IReview';
 export const Action = {
   CHANGE_GENRE: 'films/changeGenre',
   GET_FILMS: 'data/getFilms',
+  GET_FILM: 'data/getFilm',
+  GET_SIMILAR_FILMS: 'data/getSimilarFilms',
   GET_PROMO_FILM: 'data/getPromoFilm',
   SHOW_MORE: 'films/showMoreFilms',
   RESET_FILMS_COUNT: 'films/resetFilmsCount',
@@ -27,21 +29,21 @@ export const changeGenre = createAction<string>(Action.CHANGE_GENRE);
 
 export const getFilms = createAction<IFilm[]>(Action.GET_FILMS);
 
+export const getFilm = createAction<IFilm>(Action.GET_FILM);
+
+export const getSimilarFilms = createAction<IFilm[]>(Action.GET_SIMILAR_FILMS);
+
 export const getPromoFilm = createAction<IFilm>(Action.GET_PROMO_FILM);
 
 export const showMore = createAction(Action.SHOW_MORE);
 
 export const resetFilmsCount = createAction(Action.RESET_FILMS_COUNT);
 
-export const requireAuthorization = createAction<AuthorizationStatus>(
-  Action.REQUIRE_AUTH
-);
+export const requireAuthorization = createAction<AuthorizationStatus>(Action.REQUIRE_AUTH);
 
 export const setError = createAction<string | null>(Action.ERROR);
 
-export const setDataLoadedStatus = createAction<boolean>(
-  Action.SET_DATA_LOADED_STATUS
-);
+export const setDataLoadedStatus = createAction<boolean>(Action.SET_DATA_LOADED_STATUS);
 
 export const setUser = createAction<IUser | null>(Action.SET_USER);
 
