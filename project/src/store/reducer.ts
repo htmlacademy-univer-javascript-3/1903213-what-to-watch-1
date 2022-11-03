@@ -2,9 +2,11 @@ import { createReducer } from '@reduxjs/toolkit';
 import {
   changeGenre,
   getFavorites,
+  getFilm,
   getFilms,
   getPromoFilm,
   getReviews,
+  getSimilarFilms,
   requireAuthorization,
   resetFilmsCount,
   setDataLoadedStatus,
@@ -23,6 +25,8 @@ export const INITIAL_FILMS_SHOW_COUNT = 8;
 type InitialState = {
   activeGenre: string;
   films: IFilm[];
+  currentFilm: IFilm | null;
+  similarFilms: IFilm[];
   initialFilms: IFilm[];
   promoFilm: IFilm;
   favoritesFilms: IFilm[];
@@ -38,6 +42,8 @@ type InitialState = {
 const initialState: InitialState = {
   activeGenre: INITIAL_GENRE,
   films: [],
+  currentFilm: null,
+  similarFilms: [],
   initialFilms: [],
   promoFilm: {} as IFilm,
   favoritesFilms: [],
@@ -66,6 +72,12 @@ const reducer = createReducer(initialState, (builder) => {
       state.initialFilms = action.payload;
       state.filmsShowCount = INITIAL_FILMS_SHOW_COUNT;
       state.totalFilmsCount = action.payload.length;
+    })
+    .addCase(getFilm, (state, action) => {
+      state.currentFilm = action.payload;
+    })
+    .addCase(getSimilarFilms, (state, action) => {
+      state.similarFilms = action.payload;
     })
     .addCase(getPromoFilm, (state, action) => {
       state.promoFilm = action.payload;

@@ -17,7 +17,7 @@ import {
   setFavoriteAction
 } from '../../store/api-actions';
 import { useAppSelector } from '../../hooks/useAppSelector';
-import { FavoritesStatus } from '../../const';
+import { AuthorizationStatus, FavoritesStatus } from '../../const';
 
 store.dispatch(fetchFilmsAction());
 store.dispatch(fetchPromoFilmAction());
@@ -27,6 +27,7 @@ function Main(): JSX.Element {
   const dispatch = useAppDispatch();
   const promoFilm = useAppSelector((state) => state.promoFilm);
   const favorites = useAppSelector((state) => state.favoritesFilms);
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
 
   const onPageUpdateResetFilms = () => {
     dispatch(changeGenre(INITIAL_GENRE));
@@ -88,17 +89,19 @@ function Main(): JSX.Element {
                   </svg>
                   <span>Play</span>
                 </Link>
-                <button
-                  className='btn btn--list film-card__button'
-                  type='button'
-                  onClick={onChangeMyListClick}
-                >
-                  <svg viewBox='0 0 19 20' width='19' height='20'>
-                    <use xlinkHref={`${inList ? '#in-list' : '#add'}`}></use>
-                  </svg>
-                  <span>My list</span>
-                  <span className='film-card__count'>{favorites.length}</span>
-                </button>
+                {authorizationStatus === AuthorizationStatus.Auth && (
+                  <button
+                    className='btn btn--list film-card__button'
+                    type='button'
+                    onClick={onChangeMyListClick}
+                  >
+                    <svg viewBox='0 0 19 20' width='19' height='20'>
+                      <use xlinkHref={`${inList ? '#in-list' : '#add'}`}></use>
+                    </svg>
+                    <span>My list</span>
+                    <span className='film-card__count'>{favorites.length}</span>
+                  </button>
+                )}
               </div>
             </div>
           </div>
