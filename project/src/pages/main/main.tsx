@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import Header from '../../components/header/header';
 import Footer from '../../components/footer/footer';
 import FilmList from '../../components/film-list/film-list';
@@ -34,7 +34,7 @@ function Main(): JSX.Element {
     dispatch(resetFilmsCount());
   };
 
-  const [inMyList, setInMyList] = useState(
+  const [inList, setInList] = useState(
     favorites?.filter((item) => item.id === promoFilm.id).length > 0
   );
 
@@ -42,12 +42,10 @@ function Main(): JSX.Element {
     dispatch(
       setFavoriteAction({
         filmId: promoFilm.id,
-        status: inMyList
-          ? FavoritesStatus.RemoveFavorite
-          : FavoritesStatus.AddFavorite
+        status: inList ? FavoritesStatus.RemoveFavorite : FavoritesStatus.AddFavorite
       })
     );
-    setInMyList(!inMyList);
+    setInList(!inList);
   };
 
   useEffect(() => {
@@ -55,7 +53,7 @@ function Main(): JSX.Element {
   }, []);
 
   return (
-    <>
+    <Fragment>
       <section className='film-card'>
         <div className='film-card__bg'>
           <img src={promoFilm.backgroundImage} alt={promoFilm.name} />
@@ -84,10 +82,7 @@ function Main(): JSX.Element {
               </p>
 
               <div className='film-card__buttons'>
-                <Link
-                  className='btn btn--play film-card__button'
-                  to={`/player/${promoFilm.id}`}
-                >
+                <Link className='btn btn--play film-card__button' to={`/player/${promoFilm.id}`}>
                   <svg viewBox='0 0 19 19' width='19' height='19'>
                     <use xlinkHref='#play-s'></use>
                   </svg>
@@ -99,7 +94,7 @@ function Main(): JSX.Element {
                   onClick={onChangeMyListClick}
                 >
                   <svg viewBox='0 0 19 20' width='19' height='20'>
-                    <use xlinkHref={`${inMyList ? '#in-list' : '#add'}`}></use>
+                    <use xlinkHref={`${inList ? '#in-list' : '#add'}`}></use>
                   </svg>
                   <span>My list</span>
                   <span className='film-card__count'>{favorites.length}</span>
@@ -109,7 +104,6 @@ function Main(): JSX.Element {
           </div>
         </div>
       </section>
-
       <div className='page-content'>
         <section className='catalog'>
           <h2 className='catalog__title visually-hidden'>Catalog</h2>
@@ -123,7 +117,7 @@ function Main(): JSX.Element {
         </section>
         <Footer />
       </div>
-    </>
+    </Fragment>
   );
 }
 

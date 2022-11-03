@@ -11,13 +11,11 @@ import PrivateRoute from '../private-route/private-route';
 import Layout from '../layout/layout';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { isCheckedAuth } from '../../services/isCheckedAuth';
-import Loading from '../../pages/loading/loading';
 import { AuthorizationStatus } from '../../const';
+import Loading from '../../pages/loading/loading';
 
 function App(): JSX.Element {
-  const { authorizationStatus, isDataLoaded } = useAppSelector(
-    (state) => state
-  );
+  const { authorizationStatus, isDataLoaded } = useAppSelector((state) => state);
 
   const isAuth = authorizationStatus === AuthorizationStatus.Auth;
 
