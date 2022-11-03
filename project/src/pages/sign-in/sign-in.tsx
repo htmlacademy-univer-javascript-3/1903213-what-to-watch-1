@@ -6,6 +6,7 @@ import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { useNavigate } from 'react-router-dom';
 import { loginAction } from '../../store/api-actions';
 import { IAuth } from '../../types/IAuth';
+import { processErrorHandle } from '../../services/process-error-handle';
 
 function SignIn(): JSX.Element {
   const emailRef = useRef<HTMLInputElement | null>(null);
@@ -15,6 +16,10 @@ function SignIn(): JSX.Element {
   const navigate = useNavigate();
 
   const onSubmit = (authData: IAuth) => {
+    if (authData.password.length === 0 || authData.login.length === 0) {
+      processErrorHandle('Password and email shouldn`t be empty');
+      return;
+    }
     dispatch(loginAction(authData));
     navigate('/');
   };
@@ -46,10 +51,7 @@ function SignIn(): JSX.Element {
                 id='user-email'
                 ref={emailRef}
               />
-              <label
-                className='sign-in__label visually-hidden'
-                htmlFor='user-email'
-              >
+              <label className='sign-in__label visually-hidden' htmlFor='user-email'>
                 Email address
               </label>
             </div>
@@ -62,10 +64,7 @@ function SignIn(): JSX.Element {
                 id='user-password'
                 ref={passwordRef}
               />
-              <label
-                className='sign-in__label visually-hidden'
-                htmlFor='user-password'
-              >
+              <label className='sign-in__label visually-hidden' htmlFor='user-password'>
                 Password
               </label>
             </div>
